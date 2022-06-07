@@ -43,8 +43,6 @@ def convert_to_list_num(my_list):
 
 
 def get_suggestions():
-    # data = pd.read_csv('main_data.csv')
-    # return list(data['movie_title'].str.capitalize())
     return list(df["original_title"].str.capitalize())
 
 
@@ -80,7 +78,8 @@ def recommend():
     vote_count = ser["ratings_count"].values[0]
     authors = ser["authors"].values[0]
 
-    df_rec = df.drop_duplicates("original_title").head(20)
+    # recommended books(Currently set to random. To replace w results from recommender models)
+    df_rec = df.drop_duplicates("original_title").sample(n=100)
     rec_posters = list(df_rec["image_url"])
     rec_books = list(df_rec["original_title"])
     rec_vote = list(df_rec["average_rating"])
@@ -90,12 +89,7 @@ def recommend():
     book_cards = {rec_posters[i]: [rec_books[i], rec_books_org[i], rec_vote[i], rec_year[i]] for i in
                   range(len(rec_posters))}
 
-    # title = "TITLE-iv"
-    # release_date = "release_date-iv"
-    # vote_count = "vote_count-iv"      # To be added after merge w ratings
-    # vote_average = "vote_average-iv"  # To be added after merge w ratings
     overview = "Overview of the book"            # To be added after merge w meta
-    # genres = "genres-iv"                # To be added after merge w meta
 
     # get movie suggestions for auto complete
     suggestions = get_suggestions()
