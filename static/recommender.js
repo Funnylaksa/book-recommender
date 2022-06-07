@@ -30,6 +30,7 @@ $(function() {
       $('.footer').css('position', 'fixed');
     }
     else{
+        $("#loader").fadeIn();
         parse_title(title);
     }
   });

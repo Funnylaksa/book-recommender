@@ -23,7 +23,7 @@ vectorizer = pickle.load(open('tranform.pkl', 'rb'))
 # df_ratings = df_ratings[df_ratings["Book-Rating"] != 0].dropna()
 # df_books = pd.read_csv("datasets/Books.csv")
 # df_combined = pd.read_csv("datasets/combined.csv")
-df = pd.read_csv("datasets/clean.csv", encoding = 'utf8')
+df = pd.read_csv("datasets/books.csv", encoding='utf8')
 
 
 # converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
