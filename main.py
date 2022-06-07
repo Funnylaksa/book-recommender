@@ -23,7 +23,7 @@ vectorizer = pickle.load(open('tranform.pkl', 'rb'))
 # df_ratings = df_ratings[df_ratings["Book-Rating"] != 0].dropna()
 # df_books = pd.read_csv("datasets/Books.csv")
 # df_combined = pd.read_csv("datasets/combined.csv")
-df = pd.read_csv("datasets/clean.csv")
+df = pd.read_csv("datasets/books.csv", encoding='utf8')
 
 
 # converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
@@ -43,8 +43,6 @@ def convert_to_list_num(my_list):
 
 
 def get_suggestions():
-    # data = pd.read_csv('main_data.csv')
-    # return list(data['movie_title'].str.capitalize())
     return list(df["original_title"].str.capitalize())
 
 
@@ -74,38 +72,32 @@ def recommend():
 
     # new dataset
     ser = df[df["original_title"].str.contains(title, case=False)]
-    release_date = ser["original_publication_year"].values[0]
+    release_date = int(ser["original_publication_year"].values[0])
     poster = ser["image_url"].values[0]
     vote_average = ser["average_rating"].values[0]
     vote_count = ser["ratings_count"].values[0]
-    df_rec = df.drop_duplicates("original_title").head(20)
-    rec_posters = list(df_rec["image_url"])
+    authors = ser["authors"].values[0]
 
+    # recommended books(Currently set to random. To replace w results from recommender models)
+    df_rec = df.drop_duplicates("original_title").sample(n=100)
+    rec_posters = list(df_rec["image_url"])
     rec_books = list(df_rec["original_title"])
     rec_vote = list(df_rec["average_rating"])
-    # rec_vote = []
-    # for rec in rec_books:
-    #     rec_vote.append(round(df_combined[df_combined["Book-Title"] == rec]["Book-Rating"].mean(), 1))
-    rec_year = list(df_rec["original_publication_year"])
+    rec_year = [int(i) for i in list(df_rec["original_publication_year"])]
     rec_books_org = rec_books
 
     book_cards = {rec_posters[i]: [rec_books[i], rec_books_org[i], rec_vote[i], rec_year[i]] for i in
                   range(len(rec_posters))}
 
-    # title = "TITLE-iv"
-    # release_date = "release_date-iv"
-    # vote_count = "vote_count-iv"      # To be added after merge w ratings
-    # vote_average = "vote_average-iv"  # To be added after merge w ratings
-    overview = "overview-iv"            # To be added after merge w meta
-    genres = "genres-iv"                # To be added after merge w meta
+    overview = "Overview of the book"            # To be added after merge w meta
 
     # get movie suggestions for auto complete
     suggestions = get_suggestions()
 
     # passing all the data to the html file
-    return render_template('recommend.html', title=title, overview=overview, vote_average=vote_average,
-                           vote_count=vote_count, release_date=release_date, genres=genres,
-                           poster=poster, book_cards=book_cards)
+    return render_template('recommend.html', title=title, vote_average=vote_average,
+                           vote_count=vote_count, release_date=release_date, authors=authors,
+                           poster=poster, book_cards=book_cards, overview=overview)
     # return render_template('recommend.html',title=title,poster=poster,overview=overview,vote_average=vote_average,
     #     vote_count=vote_count,release_date=release_date,book_rel_date=book_rel_date,curr_date=curr_date,runtime=runtime,status=status,genres=genres,book_cards=book_cards,reviews=movie_reviews,casts=casts,cast_details=cast_details)
 
