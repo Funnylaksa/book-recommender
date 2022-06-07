@@ -2,10 +2,10 @@
 
 The books dataset is taken from https://github.com/zygmuntz/goodbooks-10k. The dataset contains ten thousand most popular books with over six million ratings.
 
-## Finding similar movies
+## Finding similar books
 ### Collabarative Filtering (Just based on ratings)
 
-Using Weighted Matrix Factorisation, a recommender model is created based on the user ratings. This aim is to recommend based on collaborative filtering, to recommend users book based on what similar users rates highly. 
+Using Weighted Matrix Factorisation, a recommender model is created based on the user ratings. This aim is to recommend based on collaborative filtering, to recommend user books based on what similar users rates highly. 
 
 ### Content Based Filtering
 
