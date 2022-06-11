@@ -52,16 +52,9 @@ def recommend():
     title = request.form['title']
     user = request.form['user']
     genre = request.form['genre']
+    print(title)
+    print(user)
     print(genre)
-
-    # old dataset
-    # ser = df_books[df_books["Book-Title"].str.contains(title, case=False)]
-    # release_date = ser["Year-Of-Publication"].values[0]
-    # poster = ser["Image-URL-L"].values[0]
-    # vote_average = round(df_combined[df_combined["Book-Title"].str.contains(title, case=False)]["Book-Rating"].mean(), 2)
-    # vote_count = df_combined[df_combined["Book-Title"].str.contains(title, case=False)]["Book-Rating"].count()
-    # df_rec = df_combined.drop_duplicates("Book-Title").head(2)
-    # rec_posters = list(df_rec["Image-URL-L"])
 
     # new dataset
     ser = df[df["original_title"].str.contains(title, case=False)]
