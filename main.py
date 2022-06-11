@@ -50,6 +50,9 @@ def home():
 def recommend():
     # Get data from df
     title = request.form['title']
+    user = request.form['user']
+    genre = request.form['genre']
+    print(genre)
 
     # old dataset
     # ser = df_books[df_books["Book-Title"].str.contains(title, case=False)]

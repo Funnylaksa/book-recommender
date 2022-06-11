@@ -21,17 +21,23 @@ $(function() {
 
   $('.book-button').on('click',function(){
     var title = $('.book').val();
-    if (title=="") {
-      $('.results').css('display','none');
-      $('.fail').css('display','block');
-    }
+    var user = document.getElementById('user').value
+//    var genre = 'happy'
+    var e = document.getElementById('dropdown');
+    var genre = e.options[e.selectedIndex].value;
+
+
+//    if (title=="") {
+//      $('.results').css('display','none');
+//      $('.fail').css('display','block');
+//    }
 
     if (($('.fail').text() && ($('.footer').css('position') == 'absolute'))) {
       $('.footer').css('position', 'fixed');
     }
     else{
         $("#loader").fadeIn();
-        parse_title(title);
+        parse_title(title, user, genre);
     }
   });
 });
@@ -39,15 +45,21 @@ $(function() {
 // will be invoked when clicking on the recommended book cards
 function recommendcard(e){
   $("#loader").fadeIn();
+  var user = $('.user').val();
   var title = e.getAttribute('title');
-  parse_title(title);
+//  var genre = 'happy'
+  var e = document.getElementById('dropdown');
+  var genre = e.options[e.selectedIndex].value;
+  parse_title(title, user, genre);
 }
 
 
 // passing title detail to python's flask for displaying
-function parse_title(book_title){
+function parse_title(book_title, user, genre){
   details = {
       'title':book_title,
+      'user' : user,
+      'genre': genre
   }
 
   $.ajax({
@@ -69,3 +81,22 @@ function parse_title(book_title){
     }
   });
 }
+
+
+//function myFunction() {
+//  document.getElementById("myDropdown").classList.toggle("show");
+//}
+//
+//// Close the dropdown menu if the user clicks outside of it
+//window.onclick = function(event) {
+//  if (!event.target.matches('.dropbtn')) {
+//    var dropdowns = document.getElementsByClassName("dropdown-content");
+//    var i;
+//    for (i = 0; i < dropdowns.length; i++) {
+//      var openDropdown = dropdowns[i];
+//      if (openDropdown.classList.contains('show')) {
+//        openDropdown.classList.remove('show');
+//      }
+//    }
+//  }
+//}

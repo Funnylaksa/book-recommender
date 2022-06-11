@@ -26,6 +26,21 @@
 	resize: none;
 }
 
+.user {
+	color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+	resize: none;
+}
+
+.dropdown {
+	color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+	resize: none;
+	width:150px;   
+}
+
 .book-content {
 	display: flex;
 	flex-wrap: wrap;
@@ -308,3 +323,7 @@ h6 {
 	display: none;
 	color: white;
 }
+
+
+
+
