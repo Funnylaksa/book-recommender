@@ -30,6 +30,7 @@
 	</div>
 	<br/>
 
+{% if title != "" %}
   <div id="mycontent">
     <div id="mcontent">
       <div class="poster-lg">
@@ -52,36 +53,49 @@
     </div>
   </div>  
   <br/>
+{% endif %}
 
 
-    {% if book_cards|length > 1 %}
+{% if title != "" %}
+    <div class="book" style="color: #E8E8E8;">
+    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS SIMILAR TO {{title}}</h2><h5>(Click any of the books to get recommendation)</h5></center>
+  </div>
+{% elif genre != "" %}
+    <div class="book" style="color: #E8E8E8;">
+    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS UNDER {{genre}} GENRE</h2><h5>(Click any of the books to get recommendation)</h5></center>
+  </div>
+{% else %}
+  <div class="book" style="color: #E8E8E8;">
+    <center><h2 style="font-family: 'Rowdies', cursive;">WELCOME TO PROJECT BOOKWORM. HERE IS A LIST OF MOST POPULAR BOOKS</h2><h5>(Click any of the books to get recommendation)</h5></center>
+  </div>
+  <br/>
+{% endif %}
 
-      <div class="book" style="color: #E8E8E8;">
-        <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU</h2><h5>(Click any of the books to get recommendation)</h5></center>
-      </div>
 
-      <div class="book-content">
-        {% for poster, details in book_cards.items() if not book_cards.hidden %}
-          <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
-            <div class="imghvr">
-              <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
-              <div class="card-img-overlay" >
-                <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
-              </div>
-              <div class=".card-img-overlay" style="position: relative;">
-                <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
-              </div>
-              <figcaption class="fig">
-                <button class="card-btn btn btn-danger"> Click Me </button>
-              </figcaption>
-            </div>
-            <div class="card-body">
-              <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
-            </div>
+
+{% if book_cards|length > 1 %}
+  <div class="book-content">
+    {% for poster, details in book_cards.items() if not book_cards.hidden %}
+      <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
+        <div class="imghvr">
+          <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
+          <div class="card-img-overlay" >
+            <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
           </div>
-        {% endfor %}
+          <div class=".card-img-overlay" style="position: relative;">
+            <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
+          </div>
+          <figcaption class="fig">
+            <button class="card-btn btn btn-danger"> Click Me </button>
+          </figcaption>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
+        </div>
       </div>
-    {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
 <br/><br/><br/><br/>
   </div>
 
