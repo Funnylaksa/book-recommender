@@ -1,20 +1,10 @@
-import numpy as np
 import pandas as pd
 from flask import Flask, render_template, request
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.metrics.pairwise import cosine_similarity
-import json
-import bs4 as bs
-import urllib.request
-import pickle
-import re
-import requests
-from datetime import date, datetime
 
 # load the nlp model and tfidf vectorizer from disk
-filename = 'nlp_model.pkl'
-clf = pickle.load(open(filename, 'rb'))
-vectorizer = pickle.load(open('tranform.pkl', 'rb'))
+# filename = 'nlp_model.pkl'
+# clf = pickle.load(open(filename, 'rb'))
+# vectorizer = pickle.load(open('tranform.pkl', 'rb'))
 
 
 # Load Books DataFrame
@@ -23,7 +13,7 @@ vectorizer = pickle.load(open('tranform.pkl', 'rb'))
 # df_ratings = df_ratings[df_ratings["Book-Rating"] != 0].dropna()
 # df_books = pd.read_csv("datasets/Books.csv")
 # df_combined = pd.read_csv("datasets/combined.csv")
-df = pd.read_csv("datasets/books.csv", encoding='utf8')
+df = pd.read_csv("datasets/books_enriched_clean.csv", encoding='utf8')
 
 
 # converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
@@ -60,6 +50,9 @@ def home():
 def recommend():
     # Get data from df
     title = request.form['title']
+    user = request.form['user']
+    genre = request.form['genre']
+    print(genre)
 
     # old dataset
     # ser = df_books[df_books["Book-Title"].str.contains(title, case=False)]
@@ -77,6 +70,8 @@ def recommend():
     vote_average = ser["average_rating"].values[0]
     vote_count = ser["ratings_count"].values[0]
     authors = ser["authors"].values[0]
+    overview = ser["description"].values[0]
+    genres = ser["genres"].values[0]
 
     # recommended books(Currently set to random. To replace w results from recommender models)
     df_rec = df.drop_duplicates("original_title").sample(n=100)
@@ -89,15 +84,13 @@ def recommend():
     book_cards = {rec_posters[i]: [rec_books[i], rec_books_org[i], rec_vote[i], rec_year[i]] for i in
                   range(len(rec_posters))}
 
-    overview = "Overview of the book"            # To be added after merge w meta
-
     # get movie suggestions for auto complete
     suggestions = get_suggestions()
 
     # passing all the data to the html file
     return render_template('recommend.html', title=title, vote_average=vote_average,
                            vote_count=vote_count, release_date=release_date, authors=authors,
-                           poster=poster, book_cards=book_cards, overview=overview)
+                           poster=poster, book_cards=book_cards, overview=overview, genres=genres)
     # return render_template('recommend.html',title=title,poster=poster,overview=overview,vote_average=vote_average,
     #     vote_count=vote_count,release_date=release_date,book_rel_date=book_rel_date,curr_date=curr_date,runtime=runtime,status=status,genres=genres,book_cards=book_cards,reviews=movie_reviews,casts=casts,cast_details=cast_details)
 

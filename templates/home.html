@@ -24,12 +24,12 @@
   <!-- External CSS -->
   <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='style.css') }}">
 
-  <script type="text/javascript">
-    var films = {{suggestions|tojson}};
-    $(document).ready(function(){
-      $("#myModal").modal('show');
-    });
-  </script>
+<!--  <script type="text/javascript">-->
+<!--    var films = {{suggestions|tojson}};-->
+<!--    $(document).ready(function(){-->
+<!--      $("#myModal").modal('show');-->
+<!--    });-->
+<!--  </script>-->
 
 </head>
 
@@ -50,18 +50,41 @@
 		      </svg>
 		    </a>
     <center><h1 class="app-title">Project Bookworm</h1></center>
+
+
+<!--    user form-->
+    <div class="form-group shadow-textarea" style="text-align: center;color: white;">
+        USER ID: <input type="text" name="user" class="user form-control" id="user" style="background-color: #ffffff;border-color:#ffffff;width: 5%;color: #181818" required="required" />
+        <br>
+    </div>
+
+<!--    genre dropdown-->
+    <div class="form-group shadow-textarea" style="text-align: center;color: white;">
+        <body>
+            <select name="dropdown" id="dropdown">
+                <option value="" selected>Choose Genre...</option>
+                <option value="horror"> Horror</option>
+                <option value="thriller">Thriller</option>
+                <option value="art">Art</option>
+            </select>
+        </body>
+    </div>
+
+<!--    book form    -->
     <div class="form-group shadow-textarea" style="margin-top: 40px;text-align: center;color: white;">
-        <input type="text" name="book" class="book form-control" id="autoComplete" autocomplete="off" placeholder="Enter the book Name" style="background-color: #ffffff;border-color:#ffffff;width: 60%;color: #181818" required="required" />
+        <input type="text" name="book" class="book form-control" id="autoComplete" autocomplete="on" placeholder="Enter the book Name" style="background-color: #ffffff;border-color:#ffffff;width: 60%;color: #181818" required="required" />
         <br>
     </div>
 
     <div class="form-group" style="text-align: center;">
-      <button class="btn btn-primary btn-block book-button" style="background-color: #000000;text-align: center;border-color: #000000;width:120px;" disabled="true" >Enter</button><br><br>
+      <button class="btn btn-primary btn-block book-button" style="background-color: #000000;text-align: center;border-color: #000000;width:120px;" disabled="false" >Enter</button><br><br>
     </div>
 	</div>
 
   <div id="loader" class="text-center">
   </div>
+
+
 
   <div class="fail">
     <center><h3>Sorry! The book you requested is not in our database.
@@ -86,7 +109,6 @@
 	
       <script src="https://cdn.jsdelivr.net/npm/@tarekraafat/autocomplete.js@7.2.0/dist/js/autoComplete.min.js"></script>
       <script type="text/javascript" src="{{url_for('static', filename='autocomplete.js')}}"></script>
-
       <script type="text/javascript" src="{{url_for('static', filename='recommender.js')}}"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
       <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>

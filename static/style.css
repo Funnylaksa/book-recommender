@@ -26,6 +26,13 @@
 	resize: none;
 }
 
+.user {
+	color: #fff;
+	margin-left: auto;
+	margin-right: auto;
+	resize: none;
+}
+
 .book-content {
 	display: flex;
 	flex-wrap: wrap;
