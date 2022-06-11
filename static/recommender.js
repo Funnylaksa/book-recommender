@@ -3,7 +3,7 @@ $(function() {
   const source = document.getElementById('autoComplete');
   const inputHandler = function(e) {
     if(e.target.value==""){
-      $('.book-button').attr('disabled', true);
+      $('.book-button').attr('disabled', false);
     }
     else{
       $('.book-button').attr('disabled', false);
