@@ -58,11 +58,11 @@
 
 {% if title != "" %}
     <div class="book" style="color: #E8E8E8;">
-    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS SIMILAR TO {{title}}</h2><h5>(Click any of the books to get recommendation)</h5></center>
+    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS SIMILAR TO {{ title|upper }}</h2><h5>(Click any of the books to get recommendation)</h5></center>
   </div>
 {% elif genre != "" %}
     <div class="book" style="color: #E8E8E8;">
-    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS UNDER {{genre}} GENRE</h2><h5>(Click any of the books to get recommendation)</h5></center>
+    <center><h2 style="font-family: 'Rowdies', cursive;">RECOMMENDED BOOKS FOR YOU - BOOKS UNDER {{ genre|upper }} GENRE</h2><h5>(Click any of the books to get recommendation)</h5></center>
   </div>
 {% else %}
   <div class="book" style="color: #E8E8E8;">
