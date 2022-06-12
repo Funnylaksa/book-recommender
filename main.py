@@ -76,13 +76,13 @@ def recommend():
     if title != "":
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0] - 1
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
+        print(f"book_id: {book_id}")
     elif user_id != "":
         rec_list = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
     else:
         rec_list = random.sample(range(10000), 100)
     df_rec = df[df.book_id.isin(rec_list)]
 
-    print(f"book_id: {book_id}")
     print(f"rec_list: {rec_list}")
 
     # Details of recommended items
