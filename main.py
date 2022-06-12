@@ -57,9 +57,9 @@ def recommend():
     title = request.form['title']
     user_id = request.form['user']
     genre = request.form['genre']
-    print(title)
-    print(user_id)
-    print(genre)
+    print(f"title: {title}")
+    print(f"user_id: {user_id}")
+    print(f"genre: {genre}")
 
     # If book chosen, display info on book
     ser = df[df["original_title"].str.contains(title, case=False)]
@@ -74,13 +74,16 @@ def recommend():
     # Recommended Items based on inputs
     # df_rec = df.drop_duplicates("original_title").sample(n=100)
     if title != "":
-        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
+        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0] - 1
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
     elif user_id != "":
         rec_list = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
     else:
         rec_list = random.sample(range(10000), 100)
     df_rec = df[df.book_id.isin(rec_list)]
+
+    print(f"book_id: {book_id}")
+    print(f"rec_list: {rec_list}")
 
     # Details of recommended items
     rec_posters = list(df_rec["image_url"])
