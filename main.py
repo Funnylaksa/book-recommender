@@ -57,9 +57,9 @@ def recommend():
     title = request.form['title']
     user_id = request.form['user']
     genre = request.form['genre']
-    # print(title)
-    # print(user)
-    # print(genre)
+    print(title)
+    print(user_id)
+    print(genre)
 
     # If book chosen, display info on book
     ser = df[df["original_title"].str.contains(title, case=False)]
@@ -77,7 +77,7 @@ def recommend():
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
     elif user_id != "":
-        rec_list = df_recommend_by_user.loc[[user_id]].recommended_books.values[0]
+        rec_list = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
     else:
         rec_list = random.sample(range(10000), 100)
     df_rec = df[df.book_id.isin(rec_list)]
@@ -97,7 +97,7 @@ def recommend():
 
     # passing all the data to the html file
     return render_template('recommend.html', title=title, vote_average=vote_average,
-                           vote_count=vote_count, release_date=release_date, authors=authors,
+                           vote_count=vote_count, release_date=release_date, authors=authors, user_id=user_id,
                            poster=poster, book_cards=book_cards, overview=overview, genres=genres, genre=genre)
     # return render_template('recommend.html',title=title,poster=poster,overview=overview,vote_average=vote_average,
     #     vote_count=vote_count,release_date=release_date,book_rel_date=book_rel_date,curr_date=curr_date,runtime=runtime,status=status,genres=genres,book_cards=book_cards,reviews=movie_reviews,casts=casts,cast_details=cast_details)
