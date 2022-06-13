@@ -41,6 +41,10 @@ def clean_str(my_string):
     return my_string.replace("[", "").replace("]", "").replace("'", "")
 
 
+def escape_special_char(my_string):
+    return my_string.replace("+", "\+").replace("^", "\^").replace("(", "\(").replace(")", "\)").replace("?", "\?").replace("[", "\[").replace("]", "\]").replace("*", "\*").replace("$", "\$")
+
+
 app = Flask(__name__)
 
 
@@ -54,7 +58,7 @@ def home():
 @app.route("/recommend", methods=["POST"])
 def recommend():
     # Get input from Web App FrontEnd
-    title = request.form['title']
+    title = escape_special_char(request.form['title'])
     user_id = request.form['user']
     genre = request.form['genre']
     print(f"title: {title}")
@@ -63,6 +67,7 @@ def recommend():
 
     # If book chosen, display info on book
     ser = df[df["original_title"].str.contains(title, case=False)]
+    print(f"ser: {ser}")
     release_date = int(ser["original_publication_year"].values[0])
     poster = ser["image_url"].values[0]
     vote_average = ser["average_rating"].values[0]
@@ -74,7 +79,7 @@ def recommend():
     # Recommended Items based on inputs
     # df_rec = df.drop_duplicates("original_title").sample(n=100)
     if title != "":
-        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0] - 1
+        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
         print(f"book_id: {book_id}")
     elif user_id != "":
@@ -82,7 +87,6 @@ def recommend():
     else:
         rec_list = random.sample(range(10000), 100)
     df_rec = df[df.book_id.isin(rec_list)]
-
     print(f"rec_list: {rec_list}")
 
     # Details of recommended items
