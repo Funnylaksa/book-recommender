@@ -1,7 +1,10 @@
+from typing import Any
+
 import pandas as pd
 from flask import Flask, render_template, request
 import random
 from ast import literal_eval
+from collections import OrderedDict
 
 # load the nlp model and tfidf vectorizer from disk
 # filename = 'nlp_model.pkl'
@@ -82,12 +85,16 @@ def recommend():
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
         print(f"book_id: {book_id}")
+        print("rec_list based on title")
     elif user_id != "":
         rec_list = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
+        print("rec_list based on user")
     else:
         rec_list = random.sample(range(10000), 100)
-    df_rec = df[df.book_id.isin(rec_list)]
-    print(f"rec_list: {rec_list}")
+        print("rec_list random")
+    df_rec = pd.DataFrame()
+    for id in rec_list:
+        df_rec = df_rec.append(df[df.book_id == id])
 
     # Details of recommended items
     rec_posters = list(df_rec["image_url"])
