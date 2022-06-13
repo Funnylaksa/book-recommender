@@ -70,7 +70,6 @@ def recommend():
 
     # If book chosen, display info on book
     ser = df[df["original_title"].str.contains(title, case=False)]
-    print(f"ser: {ser}")
     release_date = int(ser["original_publication_year"].values[0])
     poster = ser["image_url"].values[0]
     vote_average = ser["average_rating"].values[0]

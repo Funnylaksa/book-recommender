@@ -58,25 +58,35 @@
 
 <!--Specific greetings and models based on user inputs-->
 <div class="book" style="color: #E8E8E8;">
-<center><h2 style="font-family: 'Rowdies', cursive;">HOWDY USER {{user_id}}! WELCOME TO PROJECT BOOKWORM </h2></center>
+    <center><h2 style="font-family: 'Rowdies', cursive;">HOWDY USER {{user_id}}! WELCOME TO PROJECT BOOKWORM </h2></center>
 </div>
+
 {% if user_id != "" %}
 <div class="book" style="color: #E8E8E8;">
-<center><h7 style="font-family: 'Rowdies', cursive;">recommended based on user profile: user {{ user_id }} </h7></center>
+    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on user profile: user {{ user_id }} </h7></center>
 </div>
 {% endif %}
+
 {% if title != "" %}
 <div class="book" style="color: #E8E8E8;">
-<center><h7 style="font-family: 'Rowdies', cursive;">recommended based on book similarity: {{ title|lower }}</h7></center>
+   <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on book similarity: {{ title|lower }}</h7></center>
 </div>
 {% endif %}
+
 {% if genre != "" %}
 <div class="book" style="color: #E8E8E8;">
-<center><h7 style="font-family: 'Rowdies', cursive;">recommended based on genre: {{ genre|lower }} </h7></center>
+    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on genre: {{ genre|lower }} </h7></center>
 </div>
 {% endif %}
+
+{% if genre == "" and title == "" and user_id == "" %}
 <div class="book" style="color: #E8E8E8;">
-<center><h5>(Click any of the books to get recommendation)</h5></center>
+    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on: most popular books </h7></center>
+</div>
+{% endif %}
+
+<div class="book" style="color: #E8E8E8;">
+    <center><h5>(Click any of the books to get recommendation)</h5></center>
 </div>
 <!--  <div class="book" style="color: #E8E8E8;">-->
 <!--    <center><h2 style="font-family: 'Rowdies', cursive;"> HERE IS A LIST OF MOST POPULAR BOOKS</h2><h5>(Click any of the books to get recommendation)</h5></center>-->
