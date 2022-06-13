@@ -6,34 +6,13 @@ import random
 from ast import literal_eval
 from collections import OrderedDict
 
-# load the nlp model and tfidf vectorizer from disk
-# filename = 'nlp_model.pkl'
-# clf = pickle.load(open(filename, 'rb'))
-# vectorizer = pickle.load(open('tranform.pkl', 'rb'))
-
-
 # Load Books and Recommended DataFrame
 df = pd.read_csv("datasets/books_enriched_clean.csv", encoding='utf8')
+most_pop = pd.read_csv("datasets/most_pop.csv")
 df_recommend_by_user = pd.read_csv("datasets/recommend_by_user.csv", index_col="user_id",
                                    converters={"recommended_books": literal_eval})
 df_recommend_by_book = pd.read_csv("datasets/recommend_by_book.csv", index_col="book_id",
                                    converters={"recommended_books": literal_eval})
-
-
-# converting list of string to list (eg. "["abc","def"]" to ["abc","def"])
-def convert_to_list(my_list):
-    my_list = my_list.split('","')
-    my_list[0] = my_list[0].replace('["', '')
-    my_list[-1] = my_list[-1].replace('"]', '')
-    return my_list
-
-
-# convert list of numbers to list (eg. "[1,2,3]" to [1,2,3])
-def convert_to_list_num(my_list):
-    my_list = my_list.split(',')
-    my_list[0] = my_list[0].replace("[", "")
-    my_list[-1] = my_list[-1].replace("]", "")
-    return my_list
 
 
 def get_suggestions():
@@ -45,7 +24,18 @@ def clean_str(my_string):
 
 
 def escape_special_char(my_string):
-    return my_string.replace("+", "\+").replace("^", "\^").replace("(", "\(").replace(")", "\)").replace("?", "\?").replace("[", "\[").replace("]", "\]").replace("*", "\*").replace("$", "\$")
+    return my_string.replace("+", "\+").replace("^", "\^").replace("(", "\(").replace(")", "\)").replace("?", "\?") \
+        .replace("[", "\[").replace("]", "\]").replace("*", "\*").replace("$", "\$")
+
+
+def combine(lst1, lst2):
+    similar = list(set(lst1) & set(lst2))
+    remain1 = [i for i in lst1 if i not in similar]
+    remain2 = [i for i in lst2 if i not in similar]
+    for i in range(100 - len(similar)):
+        similar.append(remain1[i])
+        similar.append(remain2[i])
+    return similar[:100]
 
 
 app = Flask(__name__)
@@ -79,41 +69,75 @@ def recommend():
     genres = clean_str(ser["genres"].values[0])
 
     # Recommended Items based on inputs
-    # df_rec = df.drop_duplicates("original_title").sample(n=100)
-    if title != "":
+    if title != "" and user_id != "" and genre != "":
+        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
+        book_mask = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
+        user_mask = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)
+        book_and_user = combine(book_mask, user_mask)
+        rec_list = list(set(book_and_user) & set(genre_mask))
+        print("recommend based on title, user & genre")
+
+    elif title != "" and user_id != "":
+        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
+        book_mask = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
+        user_mask = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
+        rec_list = combine(book_mask, user_mask)
+        print("recommend based on title & user")
+
+    elif title != "" and genre != "":
+        book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
+        book_mask = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)
+        rec_list = list(set(book_mask) & set(genre_mask))
+        print("recommend based on title & genre")
+
+    elif user_id != "" and genre != "":
+        user_mask = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)
+        rec_list = list(set(user_mask) & set(genre_mask))
+        print("recommend based on user & genre")
+
+    elif title != "":
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         rec_list = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
-        print(f"book_id: {book_id}")
-        print("rec_list based on title")
+        print("recommend based on title")
+
     elif user_id != "":
         rec_list = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
-        print("rec_list based on user")
+        print("recommend based on user")
+
+    elif genre != "":
+        rec_list = list(most_pop[most_pop.genres.str.contains(genre)].head(100).book_id)
+        print("recommend based on genre")
+
     else:
-        rec_list = random.sample(range(10000), 100)
-        print("rec_list random")
+        rec_list = list(most_pop.book_id)[:100]
+        print("recommend based on most popular")
+
+    print(f"rec list: {rec_list}")
     df_rec = pd.DataFrame()
     for id in rec_list:
         df_rec = df_rec.append(df[df.book_id == id])
 
-    # Details of recommended items
-    rec_posters = list(df_rec["image_url"])
-    rec_books = list(df_rec["original_title"])
-    rec_vote = list(df_rec["average_rating"])
-    rec_year = [int(i) for i in list(df_rec["original_publication_year"])]
-    rec_books_org = rec_books
+    if rec_list:
+        # Details of recommended items
+        rec_posters = list(df_rec["image_url"])
+        rec_books = list(df_rec["original_title"])
+        rec_vote = list(df_rec["average_rating"])
+        rec_year = [int(i) for i in list(df_rec["original_publication_year"])]
+        rec_books_org = rec_books
 
-    book_cards = {rec_posters[i]: [rec_books[i], rec_books_org[i], rec_vote[i], rec_year[i]] for i in
-                  range(len(rec_posters))}
-
-    # get movie suggestions for auto complete
-    suggestions = get_suggestions()
+        book_cards = {rec_posters[i]: [rec_books[i], rec_books_org[i], rec_vote[i], rec_year[i]] for i in
+                      range(len(rec_posters))}
+    else:
+        book_cards = []
+        print('no recommendation based on selection')
 
     # passing all the data to the html file
     return render_template('recommend.html', title=title, vote_average=vote_average,
                            vote_count=vote_count, release_date=release_date, authors=authors, user_id=user_id,
                            poster=poster, book_cards=book_cards, overview=overview, genres=genres, genre=genre)
-    # return render_template('recommend.html',title=title,poster=poster,overview=overview,vote_average=vote_average,
-    #     vote_count=vote_count,release_date=release_date,book_rel_date=book_rel_date,curr_date=curr_date,runtime=runtime,status=status,genres=genres,book_cards=book_cards,reviews=movie_reviews,casts=casts,cast_details=cast_details)
 
 
 if __name__ == '__main__':
