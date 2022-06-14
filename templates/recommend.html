@@ -55,46 +55,21 @@
   <br/>
 {% endif %}
 
-
 <!--Specific greetings and models based on user inputs-->
 <div class="book" style="color: #E8E8E8;">
     <center><h2 style="font-family: 'Rowdies', cursive;">HOWDY USER {{user_id}}! WELCOME TO PROJECT BOOKWORM </h2></center>
 </div>
 
-{% if user_id != "" %}
-<div class="book" style="color: #E8E8E8;">
-    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on user profile: user {{ user_id }} </h7></center>
-</div>
-{% endif %}
-
-{% if title != "" %}
-<div class="book" style="color: #E8E8E8;">
-   <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on book similarity: {{ title|lower }}</h7></center>
-</div>
-{% endif %}
-
-{% if genre != "" %}
-<div class="book" style="color: #E8E8E8;">
-    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on genre: {{ genre|lower }} </h7></center>
-</div>
-{% endif %}
-
-{% if genre == "" and title == "" and user_id == "" %}
-<div class="book" style="color: #E8E8E8;">
-    <center><h7 style="font-family: 'Rowdies', cursive;">recommended based on: most popular books </h7></center>
-</div>
-{% endif %}
-
 <div class="book" style="color: #E8E8E8;">
     <center><h5>(Click any of the books to get recommendation)</h5></center>
 </div>
-<!--  <div class="book" style="color: #E8E8E8;">-->
-<!--    <center><h2 style="font-family: 'Rowdies', cursive;"> HERE IS A LIST OF MOST POPULAR BOOKS</h2><h5>(Click any of the books to get recommendation)</h5></center>-->
-<!--  </div>-->
-<!--  <br/>-->
 
 
+<!--combined book cards-->
 {% if book_cards|length > 1 %}
+    <div class="book" style="color: #E8E8E8;">
+    <center><h3 style="font-family: 'Rowdies', cursive;">Top Recommendations </h3></center>
+</div>
   <div class="book-content">
     {% for poster, details in book_cards.items() if not book_cards.hidden %}
       <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
@@ -116,13 +91,128 @@
       </div>
     {% endfor %}
   </div>
-{% else %}
-    <div class="book" style="color: #E8E8E8;">
-    <center><h3 style="font-family: 'Rowdies', cursive;"> OOPS! No books found. Please try other combinations  </h3></center>
-        </div>
-    <center><img src="https://cdn.glitch.com/0e4d1ff3-5897-47c5-9711-d026c01539b8%2Fbddfd6e4434f42662b009295c9bab86e.gif?v=1573157191712" alt="this slowpoke moves" class="center" width="250" alt="404 image"/></center>
+    {% endif %}
 
+<!-- b_book_cards    -->
+ {% if b_book_cards|length > 1 %}
+    <hr class="solid">
+       <div class="book" style="color: #E8E8E8;">
+   <center><h3 style="font-family: 'Rowdies', cursive;">Recommended Based on Book Similarity: {{ title }}</h3></center>
+</div>
+  <div class="book-content">
+    {% for poster, details in b_book_cards.items() if not b_book_cards.hidden %}
+      <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
+        <div class="imghvr">
+          <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
+          <div class="card-img-overlay" >
+            <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
+          </div>
+          <div class=".card-img-overlay" style="position: relative;">
+            <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
+          </div>
+          <figcaption class="fig">
+            <button class="card-btn btn btn-danger"> Click Me </button>
+          </figcaption>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
 {% endif %}
+
+<!-- g_book_cards    -->
+ {% if g_book_cards|length > 1 %}
+    <hr class="solid">
+       <div class="book" style="color: #E8E8E8;">
+    <center><h3 style="font-family: 'Rowdies', cursive;">Recommended Based on Genre: {{ genre }}</h3></center>
+    </div>
+  <div class="book-content">
+    {% for poster, details in g_book_cards.items() if not g_book_cards.hidden %}
+      <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
+        <div class="imghvr">
+          <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
+          <div class="card-img-overlay" >
+            <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
+          </div>
+          <div class=".card-img-overlay" style="position: relative;">
+            <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
+          </div>
+          <figcaption class="fig">
+            <button class="card-btn btn btn-danger"> Click Me </button>
+          </figcaption>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+<!-- u_book_cards    -->
+{% if u_book_cards|length > 1 %}
+    <hr class="solid">
+    <div class="book" style="color: #E8E8E8;">
+    <center><h3 style="font-family: 'Rowdies', cursive;">Recommended Based on User Profile: User {{ user_id }} </h3></center>
+</div>
+  <div class="book-content">
+    {% for poster, details in u_book_cards.items() if not u_book_cards.hidden %}
+      <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
+        <div class="imghvr">
+          <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
+          <div class="card-img-overlay" >
+            <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
+          </div>
+          <div class=".card-img-overlay" style="position: relative;">
+            <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
+          </div>
+          <figcaption class="fig">
+            <button class="card-btn btn btn-danger"> Click Me </button>
+          </figcaption>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+    {% endif %}
+
+<!-- p_book_cards    -->
+{% if p_book_cards|length > 1 %}
+    <hr class="solid">
+    <div class="book" style="color: #E8E8E8;">
+    <center><h3 style="font-family: 'Rowdies', cursive;">Recommended Based On: Most Popular Books </h3></center>
+</div>
+  <div class="book-content">
+    {% for poster, details in p_book_cards.items() if not p_book_cards.hidden %}
+      <div class="card" style="width: 14rem;" title="{{details[1]}}" onclick="recommendcard(this)">
+        <div class="imghvr">
+          <img class="card-img-top" height="360" width="240" alt="{{details[0]}} - poster" src={{poster}}>
+          <div class="card-img-overlay" >
+            <span class="card-text" style="font-size:15px;background: #000000b8;color:white;padding:2px 5px;border-radius: 10px;"><span class="fa fa-star checked">&nbsp; {{details[2]}}/5</span></span>
+          </div>
+          <div class=".card-img-overlay" style="position: relative;">
+            <span class="card-text" style="font-size:15px;position:absolute;bottom:20px;left:15px;background: #000000b8;color:white;padding: 5px;border-radius: 10px;">{{details[3]}}</span>
+          </div>
+          <figcaption class="fig">
+            <button class="card-btn btn btn-danger"> Click Me </button>
+          </figcaption>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title" style="font-family: 'Rowdies', cursive;font-size: 17px;">{{details[0]|upper}}</h5>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+    {% endif %}
+
+<!--    <div class="book" style="color: #E8E8E8;">-->
+<!--    <center><h3 style="font-family: 'Rowdies', cursive;"> OOPS! No books found. Please try other combinations  </h3></center>-->
+<!--        </div>-->
+<!--    <center><img src="https://cdn.glitch.com/0e4d1ff3-5897-47c5-9711-d026c01539b8%2Fbddfd6e4434f42662b009295c9bab86e.gif?v=1573157191712" alt="this slowpoke moves" class="center" width="250" alt="404 image"/></center>-->
 <br/><br/><br/><br/>
   </div>
 
