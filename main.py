@@ -12,6 +12,7 @@ df_recommend_by_user = pd.read_csv("datasets/recommend_by_user.csv", index_col="
                                    converters={"recommended_books": literal_eval})
 df_recommend_by_book = pd.read_csv("datasets/recommend_by_book.csv", index_col="book_id",
                                    converters={"recommended_books": literal_eval})
+rec_size = 50
 
 
 def get_suggestions():
@@ -39,14 +40,14 @@ def combine(lst1, lst2, lst3=False):
 
     if lst3:
         similar = list(set(lst1) & set(lst2) & set(lst3))
-        remain_count = (50 - len(similar)) // 3
+        remain_count = (rec_size - len(similar)) // 3
         remain1 = [i for i in lst1 if i not in similar][:remain_count]
         remain2 = [i for i in lst2 if i not in similar][:remain_count]
         remain3 = [i for i in lst3 if i not in similar][:remain_count]
         return similar, remain1, remain2, remain3
     else:
         similar = list(set(lst1) & set(lst2))
-        remain_count = (50 - len(similar)) // 2
+        remain_count = (rec_size - len(similar)) // 2
         remain1 = [i for i in lst1 if i not in similar][:remain_count]
         remain2 = [i for i in lst2 if i not in similar][:remain_count]
         return similar, remain1, remain2
@@ -81,7 +82,7 @@ def home():
 @app.route("/recommend", methods=["POST"])
 def recommend():
     # Get input from Web App FrontEnd
-    k = 50
+    
     title = escape_special_char(request.form['title'])
     user_id = request.form['user']
     genre = request.form['genre']
@@ -103,7 +104,7 @@ def recommend():
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         book_mask = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
         user_mask = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
-        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:50]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:rec_size]
         combine_lst, book_lst, user_lst, genre_lst = combine(book_mask, user_mask, genre_mask)
 
     elif title != "" and user_id != "":
@@ -117,13 +118,13 @@ def recommend():
         # recommend based on title & genre
         book_id = df[df["original_title"].str.contains(title, case=False)].book_id.values[0]
         book_mask = df_recommend_by_book.loc[[book_id]].recommended_books.values[0]
-        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:50]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:rec_size]
         combine_lst, genre_lst, book_lst = combine(genre_mask, book_mask)
 
     elif user_id != "" and genre != "":
         # recommend based on user & genre
         user_mask = df_recommend_by_user.loc[[int(user_id)]].recommended_books.values[0]
-        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:50]
+        genre_mask = list(most_pop[most_pop.genres.str.contains(genre)].book_id)[:rec_size]
         combine_lst, genre_lst, user_lst = combine(genre_mask, user_mask)
 
     elif title != "":
@@ -137,11 +138,11 @@ def recommend():
 
     elif genre != "":
         # recommend based on genre
-        genre_lst = list(most_pop[most_pop.genres.str.contains(genre)].head(50).book_id)
+        genre_lst = list(most_pop[most_pop.genres.str.contains(genre)].head(rec_size).book_id)
 
     else:
         # recommend based on most popular
-        pop_lst = list(most_pop.book_id)[:50]
+        pop_lst = list(most_pop.book_id)[:rec_size]
 
     book_cards = get_recommended_list(combine_lst)
     g_book_cards = get_recommended_list(genre_lst)

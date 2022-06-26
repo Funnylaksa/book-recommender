@@ -11,20 +11,22 @@ There are 3 inputs in this web app.
 Based on the inputs, a list of recommended books will be generated using different models. The default list is set to a 100 books and can be lower depending on the inputs. 
 
 
-## Finding similar books (Collaborative Filtering)
-The 1st recommender model is created using Collaborative Deep Learning (CDL) training on user ratings. This model uses collaborative filtering, and aims to recommend user books based on what similar users rate highly. On top of ratings data, books description is also fed into the model, providing an additional dimension(text modality) to boost the performance of the recommender.
+## Recommending books based on user preference (Collaborative Filtering)
+The 1st recommender model is created using Collaborative Deep Learning (CDL) training on user ratings. This model uses collaborative filtering, and aims to recommend user books using data of what a particular user like/dislike, and compares it to other users' ratings. On top of ratings data, books description is also fed into the model, providing an additional dimension(text modality) to boost the performance of the recommender.
 
 From the input dataset, user preference data is available in the form of book ratings given by a group of users. Using the preference data, CDL can be used to generate a list of recommended books based on what similar users like. 
 
-When a book input is given, the model can also predict a list of other books which are similar to given book using the latent factors generated from CDL.
+
+## Recommending books based book similarity (Using latent factor)
+When a book input is given, the latent factors generate from CDL model are used instead. Based on chosen book, the model can generate a list of other books which are similar using the latent factors. This is build on top of the assumption that users will continue to like similar books which they have rated highly.
 
 
-## Content Based Filtering
+## Recommending books based on genre
 When a genre input is given, the model will return a list of most popular books in the selected genre. Popularity is calculated using the true Bayesian estimate, where a score is given using both the average ratings and rating counts. Even if a rating of a book is high, it might rank lower on this estimate score system if it has low rating counts.
 
 
 ## Cold Start
-When no inputs are given, which simulates a cold start problem where no information is available about the new user, the most popular 100 books are returned as a result. From there, the user can select the books or choose a gerne to find books that suits their taste.
+When no inputs are given, which simulates a cold start problem where no information is available about the new user, the most popular 100 books are returned as a result. From there, the user can select the books or choose a genre to find books that suits their taste.
  
  
 ## Multiple inputs
